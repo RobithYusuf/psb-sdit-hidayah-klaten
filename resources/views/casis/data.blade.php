@@ -173,8 +173,9 @@
                                             <h6>{{ $label }}</h6>
                                             @if(isset($user->casis) && isset($user->casis->pendaftaran) && $user->casis->pendaftaran->$key)
                                             @php
-                                            $file_path = Storage::url($user->casis->pendaftaran->$key);
-                                            $file_extension = pathinfo($file_path, PATHINFO_EXTENSION);
+                                            $file_name = $user->casis->pendaftaran->$key;
+                                            $file_path = asset('storage/berkas/' . $file_name);
+                                            $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
                                             @endphp
                                             <a href="{{ $file_path }}" target="_blank" class="d-block mb-2">
                                                 @if(in_array($file_extension, ['pdf']))

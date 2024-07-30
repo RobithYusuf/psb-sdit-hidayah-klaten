@@ -81,7 +81,7 @@
         </div>
     </section>
     <br><br><br><br><br>
-    <section class="page-section" id="informasi" style="background-image: url('{{ asset('storage/' . $foto->foto) }}');">
+    <section class="page-section" id="informasi" style="background-image: url('{{ asset('storage/foto/' . $foto->foto) }}');">
         <div class="container">
             <!-- Konten Anda di sini -->
         </div>

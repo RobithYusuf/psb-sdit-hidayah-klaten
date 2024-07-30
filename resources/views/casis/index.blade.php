@@ -72,10 +72,11 @@
                                         @foreach($documents as $doc)
                                         @if($value->$doc)
                                         @php
-                                        $file_path = Storage::url($value->$doc);
-                                        $file_extension = pathinfo($file_path, PATHINFO_EXTENSION);
+                                        $file_name = $value->$doc;
+                                        $file_path = asset('storage/berkas/' . $file_name);
+                                        $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
                                         @endphp
-                                        <a href="{{ $file_path }}" target="_blank" class="mr-2">
+                                        <a href="{{ $file_path }}" target="_blank" class="mr-2" title="{{ $file_name }}">
                                             @if(in_array($file_extension, ['pdf']))
                                             <img src="{{ asset('template/dist/img/pdf.png') }}" alt="PDF Icon" style="width: 40px; height: 40px;">
                                             @elseif(in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif']))

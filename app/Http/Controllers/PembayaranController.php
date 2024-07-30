@@ -100,7 +100,7 @@ class PembayaranController extends Controller
             $nama_bukti_pembayaran = time() . '_' . $bukti_pembayaran->getClientOriginalName();
 
             // Simpan file ke storage
-            $path = $bukti_pembayaran->storeAs('public/pembayaran', $nama_bukti_pembayaran);
+            $bukti_pembayaran->storeAs('public/pembayaran', $nama_bukti_pembayaran);
 
             // Simpan data pembayaran
             $pembayaran = Pembayaran::create([
@@ -108,7 +108,7 @@ class PembayaranController extends Controller
                 'tgl_pembayaran' => now(),
                 'jumlah_pembayaran' => 100000,
                 'status_pembayaran' => 'Belum Lunas',
-                'bukti_pembayaran' => 'pembayaran/' . $nama_bukti_pembayaran,
+                'bukti_pembayaran' => $nama_bukti_pembayaran,
             ]);
 
             // Redirect dengan pesan sukses

@@ -30,21 +30,17 @@ class PendaftaranController extends Controller
     {
         // Validasi input
         $request->validate([
-            'tgl_pendaftaran' => 'required|date',
-            'status' => 'required|string',
+            'status' => 'required|in:Berhasil,Gagal,Pending',
         ]);
 
         // Temukan entri pendaftaran berdasarkan ID
-        $pendaftaran = pendaftaran::with('casis')->findOrFail($id);
+        $pendaftaran = Pendaftaran::findOrFail($id);
 
-        // Update data pendaftaran
-        $pendaftaran->tgl_pendaftaran = $request->input('tgl_pendaftaran');
-        $pendaftaran->status = $request->input('status');
+        // Update status pendaftaran
+        $pendaftaran->status = $request->status;
         $pendaftaran->save();
 
-        // Redirect kembali dengan pesan sukses
-        return redirect()->route('datapendaftaran', ['id' => $id])
-            ->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('datapendaftaran')->with('success', 'Status pendaftaran berhasil diperbarui.');
     }
 
     public function formpendaftaran()

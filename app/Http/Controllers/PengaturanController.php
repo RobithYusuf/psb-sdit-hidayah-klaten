@@ -21,8 +21,8 @@ class PengaturanController extends Controller
 
     public function pengaturan()
     {
-        $fotos = foto::where('status', 1)->get(); // Mengambil foto yang berstatus aktif (status = 1)
-        return view('pengaturan.landingpage', compact('fotos'));
+        $latestPhoto = foto::where('status', 'Mulai')->latest()->first();
+        return view('pengaturan.landingpage', compact('latestPhoto'));
     }
 
     public function upload(Request $request)
@@ -34,12 +34,11 @@ class PengaturanController extends Controller
             ]);
 
             $imageName = time() . '.' . $request->photo->extension();
-            $imagePath = 'landing/assets/img/foto/' . $imageName;
 
             DB::beginTransaction();
 
             // Upload file ke storage
-            if (!Storage::disk('public')->put($imagePath, file_get_contents($request->photo))) {
+            if (!$request->photo->storeAs('foto', $imageName, 'public')) {
                 throw new \Exception('Gagal mengunggah file.');
             }
 
@@ -48,20 +47,20 @@ class PengaturanController extends Controller
 
             // Simpan data foto baru ke dalam database
             $foto = new foto;
-            $foto->foto = $imagePath;
+            $foto->foto = $imageName;
             $foto->status = 'Mulai';
             $foto->save();
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Foto berhasil diunggah!');
+            return redirect()->back()->with('success', 'Foto berhasil diunggah! File disimpan di storage/app/public/foto/' . $imageName);
         } catch (\Exception $e) {
             DB::rollBack();
 
             // Log error
             \Log::error('Error uploading foto: ' . $e->getMessage());
 
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunggah foto. Silakan coba lagi.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunggah foto. Silakan periksa apakah file memenuhi persyaratan dan coba lagi.');
         }
     }
 

@@ -14,7 +14,7 @@ use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\LaporanController;
 
 // Public routes
-Route::get('/', [PengaturanController::class, 'index']);
+Route::get('/', [PengaturanController::class, 'index'])->name('login');
 Route::post('/registrasi', [LoginController::class, 'registrasi'])->name('registrasi');
 Route::post('/loginproses', [LoginController::class, 'loginproses'])->name('loginproses');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

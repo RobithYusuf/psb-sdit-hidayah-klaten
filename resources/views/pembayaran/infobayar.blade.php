@@ -90,7 +90,11 @@
                                         <th>Bukti Pembayaran</th>
                                         <td>
                                             @if($user->casis && $user->casis->pembayaran && $user->casis->pembayaran->bukti_pembayaran)
-                                            <a href="{{ asset('pembayaran/' . $user->casis->pembayaran->bukti_pembayaran) }}" target="_blank" class="btn btn-sm btn-info">
+                                            @php
+                                            $bukti_pembayaran = $user->casis->pembayaran->bukti_pembayaran;
+                                            $file_path = asset('storage/pembayaran/' . $bukti_pembayaran);
+                                            @endphp
+                                            <a href="{{ $file_path }}" target="_blank" class="btn btn-sm btn-info">
                                                 Lihat Bukti
                                             </a>
                                             @else

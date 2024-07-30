@@ -6,19 +6,19 @@
     <div class="content-header">
         <div class="container-fluid">
             @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                    <strong>Success!</strong> {{ session('success') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <strong>Success!</strong> {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             @elseif (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                    <strong>Error!</strong> {{ session('error') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <strong>Error!</strong> {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             @endif
         </div>
 
@@ -72,15 +72,45 @@
                                     <td>{{ $value->casis->alamat }}</td>
                                     <td>{{ Carbon\Carbon::parse($value->tgl_pendaftaran)->format('d-m-Y') }}</td>
                                     <td style="text-align: center;">
-                                        @if($value->status === 'Berhasil')
-                                        <a href="/pendaftaran/tampil data/{{$value->id_pendaftaran}}"><i class="fas fa-check-circle text-success"></i></a> Berhasil
-                                        @elseif($value->status === 'Gagal')
-                                        <a href="/pendaftaran/tampil data/{{$value->id_pendaftaran}}"><i class="fas fa-times-circle text-danger"></i></a> Gagal
-                                        @else
-                                        <a href="/pendaftaran/tampil data/{{$value->id_pendaftaran}}"><i class="fas fa-minus-circle text-secondary"></i></a> Pending
-                                        @endif
+                                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#statusModal{{ $value->id_pendaftaran }}" data-pendaftaran-id="{{ $value->id_pendaftaran }}" data-status="{{ $value->status }}">
+                                            @if($value->status === 'Berhasil')
+                                            <i class="fas fa-check-circle text-success"></i> Berhasil
+                                            @elseif($value->status === 'Gagal')
+                                            <i class="fas fa-times-circle text-danger"></i> Gagal
+                                            @else
+                                            <i class="fas fa-minus-circle text-secondary"></i> Pending
+                                            @endif
+                                        </button>
                                     </td>
                                 </tr>
+                                <!-- Modal -->
+                                <div class="modal fade" id="statusModal{{ $value->id_pendaftaran }}" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel{{ $value->id_pendaftaran }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="statusModalLabel{{ $value->id_pendaftaran }}">Status Pendaftaran</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Status saat ini: <strong>{{ $value->status }}</strong></p>
+                                                <form action="{{ route('prosesdata', ['id' => $value->id_pendaftaran]) }}" method="POST">
+                                                    @csrf
+                                                    <div class="form-group">
+                                                        <label for="status">Ubah Status:</label>
+                                                        <select class="form-control" id="status" name="status">
+                                                            <option value="Berhasil" {{ $value->status === 'Berhasil' ? 'selected' : '' }}>Berhasil</option>
+                                                            <option value="Gagal" {{ $value->status === 'Gagal' ? 'selected' : '' }}>Gagal</option>
+                                                            <option value="Pending" {{ $value->status === 'Pending' ? 'selected' : '' }}>Pending</option>
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 @endforeach
                             </tbody>
                         </table>
@@ -90,5 +120,9 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 @endsection

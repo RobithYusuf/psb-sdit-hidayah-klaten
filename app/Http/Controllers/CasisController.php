@@ -138,6 +138,19 @@ class casisController extends Controller
                 $validatedData
             );
 
+            // Proses upload file
+            $fileFields = ['akte', 'kk', 'foto'];
+            $fileData = [];
+
+            foreach ($fileFields as $field) {
+                if ($request->hasFile($field)) {
+                    $file = $request->file($field);
+                    $filename = $field . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $file->storeAs('berkas', $filename, 'public');
+                    $fileData[$field] = $filename;
+                }
+            }
+
             // Menyiapkan data pendaftaran
             $pendaftaranData = [
                 'casis_id' => $casis->id_casis,
@@ -146,16 +159,8 @@ class casisController extends Controller
                 'tgl_pendaftaran' => now(),
             ];
 
-            // Proses upload file
-            $fileFields = ['akte', 'kk', 'foto'];
-            foreach ($fileFields as $field) {
-                if ($request->hasFile($field)) {
-                    $file = $request->file($field);
-                    $filename = time() . '_' . $file->getClientOriginalName();
-                    $path = $file->storeAs('public/berkas', $filename);
-                    $pendaftaranData[$field] = 'berkas/' . $filename;
-                }
-            }
+            // Menggabungkan data pendaftaran dengan data file
+            $pendaftaranData = array_merge($pendaftaranData, $fileData);
 
             // Menyimpan atau memperbarui data pendaftaran
             $pendaftaran = pendaftaran::updateOrCreate(
@@ -174,7 +179,6 @@ class casisController extends Controller
                 ->with('error', 'Tidak ada tahun ajar yang berlangsung.')
                 ->withInput();
         } catch (\Exception $e) {
-            \Log::error('Error in proses method: ' . $e->getMessage());
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan. Silakan coba lagi nanti.')
                 ->withInput();
