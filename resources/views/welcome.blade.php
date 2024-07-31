@@ -8,7 +8,7 @@
     <meta name="author" content="" />
     <title>PENERIMAAN SISWA BARU | SD Islam Terpadu Hidayah Klaten</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="icon" type="image/png" href="{{ asset('landing/assets/img/logo.png') }}">
     <!-- Font Awesome icons (free version)-->
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Google fonts-->

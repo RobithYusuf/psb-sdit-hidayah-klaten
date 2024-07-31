@@ -7,6 +7,7 @@ use App\Models\casis;
 use App\Models\tahunajar;
 use App\Models\pendaftaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -129,6 +130,8 @@ class casisController extends Controller
                 'foto' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             ]);
 
+            DB::beginTransaction();
+
             // Mendapatkan tahun ajar yang berlangsung
             $tahunAjarBerlangsung = tahunajar::where('status', 'Berlangsung')->firstOrFail();
 
@@ -168,19 +171,32 @@ class casisController extends Controller
                 $pendaftaranData
             );
 
+            DB::commit();
+
             return redirect('/beranda/form')->with('success', 'Data Berhasil Disimpan.');
         } catch (ValidationException $e) {
+            DB::rollBack();
             return redirect()->back()
                 ->withErrors($e->errors())
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan pada input data. Silakan periksa kembali.');
         } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            Log::error('Tahun ajar tidak ditemukan: ' . $e->getMessage());
             return redirect()->back()
                 ->with('error', 'Tidak ada tahun ajar yang berlangsung.')
                 ->withInput();
-        } catch (\Exception $e) {
+        } catch (QueryException $e) {
+            DB::rollBack();
+            Log::error('Database error: ' . $e->getMessage());
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan. Silakan coba lagi nanti.')
+                ->with('error', 'Terjadi kesalahan pada database. Silakan coba lagi nanti.')
+                ->withInput();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Unexpected error: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan yang tidak terduga. Silakan coba lagi nanti.')
                 ->withInput();
         }
     }

@@ -97,7 +97,7 @@
                                             <a href="{{ $file_path }}" target="_blank" class="btn btn-sm btn-info">
                                                 Lihat Bukti
                                             </a>
-                                            @else
+                                            @else   
                                             Belum ada bukti pembayaran
                                             @endif
                                         </td>

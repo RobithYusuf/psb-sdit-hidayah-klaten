@@ -42,12 +42,11 @@ class User extends Authenticatable
 
     public function panitia()
     {
-        return $this->hasOne(panitia::class,'user_id');
+        return $this->hasOne(panitia::class, 'user_id');
     }
 
     public function casis()
     {
-        return $this->hasOne(Casis::class, 'user_id', 'id');
+        return $this->hasOne(casis::class, 'user_id', 'id');
     }
-
 }

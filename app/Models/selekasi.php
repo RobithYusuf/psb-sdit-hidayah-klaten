@@ -12,7 +12,7 @@ class selekasi extends Model
     protected $table = 'tb_seleksi';
     protected $fillable = ['id_seleksi', 'casis_id', 'pendaftaran_id', 'tgl_seleksi','nilai_baca','nilai_tulis',
                             'nilai_hitung','nilai_ngaji','nilai_wawancara','total_nilai','nilai_akhir','hasil_seleksi'];
-    protected $primaryKey = 'id_seleksi'; 
+    protected $primaryKey = 'id_seleksi';
 
     public function casis()
     {
@@ -21,6 +21,6 @@ class selekasi extends Model
 
     public function pendaftaran()
     {
-        return $this->belongsTo(Pendaftaran::class, 'pendaftaran_id', 'id_pendaftaran');
+        return $this->belongsTo(pendaftaran::class, 'pendaftaran_id', 'id_pendaftaran');
     }
 }
